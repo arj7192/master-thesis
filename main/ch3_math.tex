@@ -1,34 +1,12 @@
-\chapter{Implemented Method}
-In this chapter we will discuss our implemented system
+\chapter{Implemented Models}
+In this chapter we will discuss the machine learning models that we implemented for performing the task of audio event detection. For each dataset that we used, we designed a different model, hence in the next sections we discuss the models developed for each dataset starting with dataset-I.
 
-\lipsum[1]
+\section{Dataset-I}
 
-\section{Very important formulas}
-\lipsum[2]
+For performing the monophonic audio event detection task on this dataset, we developed two different kinds of neural network models. First we performed the classification task using a deep neural network, and then we tried the same using a convolutional neural network. In the following, we describe the two models. First, we provide an overview, then discuss the audio features that were used as the input to the models, and then we describe the complete classification procedure that takes place inside these neural networks.
 
-\begin{equation}\label{eqn:rate_eqns}
-\frac{\textrm{d}}{\textrm{d}t}\left[
-\begin{array}{l}
-P_{\textit{0}} \\
-P_{\textit{1}} \\
-P_{\textit{T}}
-\end{array}
-\right] =
-\left[
-\begin{array}{l}
-\frac{P_{\textit{1}}}{\tau_{\textit{10}}} + \frac{P_{\textit{T}}}{\tau_{\textit{T}}} - \frac{P_{\textit{0}}}{\tau_{\textit{ex}}} \\
-- \frac{P_{\textit{1}}}{\tau_{\textit{10}}} - \frac{P_{\textit{1}}}{\tau_{isc}} + \frac{P_{\textit{0}}}{\tau_{\textit{ex}}} \\
-\frac{P_{\textit{1}}}{\tau_{isc}} -  \frac{P_{\textit{T}}}{\tau_{\textit{T}}}
-\end{array}
-\right]
-\end{equation}
-
-\lipsum[3]
+\subsubsection{Deep Neural Network}
 
 
-\begin{equation}\label{eqn:avgfluorescence}
-\bar{I_{f}}(\vec{r})	 
-	= \gamma(\vec{r}) \left(1 - \frac{\tau_{\textit{T}} P_{\textit{T}}^{{eq}}\left(1-\exp \left(-\frac{(T_p - t_p)}{\tau_{\textit{T}}}\right)\right)}{1-\exp\left(-\frac{(T_p - t_p)}{\tau_{\textit{T}}} + k_{\textit{2}} t_p\right)} \times \frac{\left(\exp\left(k_{\textit{2}} t_p\right)-1\right)}{t_p} \right) 
-\end{equation}
 
-\lipsum[3]
+\subsubsection{Convolutional Neural Network}

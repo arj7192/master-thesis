@@ -212,7 +212,7 @@ Traffic	& 34.375 \\
 
 In the following, we discuss the evaluation procedure that we adopted to evaluate our results and then we present the results of our models trained on this database and compare those results with the baseline results available from the literature.
 
-\subsection{Evaluation Procedure}
+\subsection{Evaluation Procedure} \label{eval_proc_db2}
 Motivated by \cite{kons2013audio} which is the source of this dataset, we use the equal error rate as the evaluation metric for our results. In the following, we explain how exactly is the EER computed. 
 
 Calculating equal error rate on the receiver operator characteristics (ROC) curve \cite{bradley1997use} is a reliable way of estimating classification accuracy in the case of binary classification problems with a major class-skew. In our case in each of the 4 binary classifiers, the number of positive samples is much smaller than the number of negative samples, which means a class skew. This justifies the use of EER as the error metric in this case.
@@ -521,4 +521,86 @@ o & Other identifiable sounds\\
 \end{table}
 
 \subsection{Evaluation Procedure}
-\subsubsection{abc}
+Motivated by \cite{foster2015chime}, which is the source of this dataset, we use the AUC - area under (ROC) curve as the evaluation metric to evaluate the performance of our models. In the following we explain how the AUC is computed.
+
+Besides EER (equal error rate), an error metric discussed in section\ref{eval_proc_db2}, AUC is another reliable metric to estimate the classification accuracy of a binary classifier where there is a class-skew between the positive and negative classes. When we train 7 different classifiers per class, the number of positive data samples is much smaller than the number of negative data samples. Hence, AUC is a promising error metric for our case.
+
+In this dataset, the audio recordings are 4 seconds long. Each audio recording is fed as one training data instance to the classifier (CNN) which then outputs a probability. This probability indicates whether the recording belongs to the positive or the negative class depending on a high value (say 0.9) or a low value (say 0.1) respectively. The ROC curve is plotted between the \textsl{true positive rate} (TPR) and the \textsl{false positive rate} (FPR), which are computed by the comparison of the model predictions and the ground truth. (Details about ROC curve discussed in section~\ref{eval_proc_db2}). AUC is then the area under this ROC curve. The higher the area, the better the classification performance of the classifier. A purely random classifier would have an AUC score of 50\% and an ideal binary classifier would have an AUC score of 100\%. Figure~\ref{fig:auc_roc} shows the AUC for a binary classifier and a random classifier. It can be seen that the area under curve for the random classifier is 50\% as stated earlier.
+
+Similar to \cite{foster2015chime}, we perform 10-fold cross validation, holding one out of the 10 folds of data out as the test/validation set. By doing this repeatedly 10 times for the 10 folds, we get the predictions for the 10 different folds of the test/validation data. In the end we concatenate the predictions of all these 10 folds of test data (which ultimately equals to the full dataset) and then compute the AUC by comparing these predictions to the ground truth value. This is done for each of the 7 classifiers, hence, we obtain 7 different AUC scores, one for each classifier.
+
+\begin{figure}[!htb] 
+\centering 
+\includegraphics[width=0.95\columnwidth]{auc_roc}
+\caption[Area Under ROC Curve]{Area Under ROC Curve}
+\label{fig:auc_roc} 
+\end{figure}
+
+
+\subsection{Results}
+
+\subsubsection{Baseline: Gaussian Mixture Models}
+We develop and train the GMM models as an attempt to reproduce the baseline GMM results published in \cite{foster2015chime}. We have 7 audio classes, hence, for each class we train a pair of GMMs, one pertaining to the positive class and the other to the negative class. As  a part of the experiment, the number of Gaussians are varied using the values in the set {1,2,4,8}. We estimate full-covariance Gaussians and finally for each audio class 'c' and for each audio recording 'r', prediction is made by computing the log-likelihood ratio of the feature-vector corresponding to 'r', with respect to the pair of estimated GMMs. This prediction indicates the probability with which 'r' belongs to class 'c'.
+
+As discussed in the previous section, we perform a 10-fold cross validation experiment for each of the 7 audio classes. The AUCs computed for each audio class are displayed in figure~\ref{fig:gmm_result_db3} along-with the baseline results of \cite{foster2015chime}. It can be seen that our GMM implementation closely reproduces the results from \cite{foster2015chime}. The next step is then to apply this dataset to our CNN model with the aim of getting better results than those obtained using GMM. 
+
+\begin{figure}[!htb] 
+\centering 
+\includegraphics[width=0.95\columnwidth]{gmm_result_db3}
+\caption[GMM Results: Baseline results from literature (left), and results from our implemented GMM (right)]{GMM Results: Baseline results from literature (left), and results from our implemented GMM (right)}
+\label{fig:gmm_result_db3} 
+\end{figure}
+
+\subsubsection{Convolutional Neural Network}
+We train 7 different CNN models, one per audio class and perform a 10-fold cross-validation experiment as done with GMM. However, we tried a grid of hyper-parameter for each of the 7 models. Basically we experimented with 16 different permutations of controllable hyper-parameters for each of the 7 models. Table~\ref{tab:hyper_param_grid_cnn_db3} shows the 16 different sets of hyper-parameters that we tried on our CNN models.
+
+\begin{table}[tb]
+\caption[Hyper-parameter grid for CNN model]{Hyper-parameter grid for CNN model}
+\label{tab:hyper_param_grid_cnn_db3}
+\centering
+\begin{tabular}{ccccccc}
+\toprule
+ID & Learning Rate & Epochs & Batch-size & Output feature maps & Kernel size & Max-pool size \\
+\midrule
+1	& 0.01 & 500 & 50 & 7 & (7,1) & (10,1)\\
+2	& 0.003 & 1000 & 50 & 7 & (7,1) & (10,1)\\
+3   & 0.003 & 1000 & 100 & 7 & (7,1) & (10,1)\\
+4 	& 0.03 & 500 & 20 & 7 & (7,1) &  (10,1)\\
+5   & 0.001 & 1000 & 50 & 7 & (7,1) & (10,1)\\
+6   & 0.01 & 500 & 50 & 26 & (7,1) &  (10,1)\\
+7   & 0.01 & 500 & 50 & 15 & (7,1) &  (10,1)\\
+8   & 0.01 & 500 & 50 & 7 & (5,1) &  (12,1)\\
+9   & 0.01 & 500 & 50 & 7 & (9,1) & (8,1)\\
+10   & 0.01 & 500 & 50 & 15 & (5,1) & (12,1)\\
+11   & 0.01 & 500 & 50 & 4 & (9,1) & (8,1)\\
+12   & 0.001 & 1000 & 50 & 26 & (14,1) & (11,1)\\
+13   & 0.001 & 1000 & 50 & 10 & (3,1) & (11,1)\\
+14   & 0.01 & 500 & 50 & 7 & (3,1) &  (11,1)\\
+15   & 0.01 & 500 & 50 & 5 & (3,1) & (17,1)\\
+16   & 0.01 & 500 & 50 & 13 & (17,1) & (18,1)\\
+\bottomrule 
+\end{tabular}
+\end{table}
+
+We tried these 16 different permutations of hyper-parameters on each of the 7 CNN models. Table~\ref{tab:cnn_result_db3} shows the best AUC performance (in \%) obtained from these CNN models along with the permutation IDs, which tells the sets of hyper-parameters that give those best CNN results. We also compare these results with the best GMM baseline results (from literature) for each of the 7 classes.
+
+[HERE ON, SHOW IMPROVEMENT IN CNN RESULTS BY e.g. TRANSFER LEARNING, etc.]
+
+\begin{table}[tb]
+\caption[CNN results in comparison with the best GMM results]{CNN results in comparison with the best GMM results}
+\label{tab:cnn_result_db3}
+\centering
+\begin{tabular}{cccc}
+\toprule
+Class label & Best GMM result & Best CNN result & Permutation IDs  \\
+\midrule
+c & 89 & 89 & (8,16)\\
+m & 86 & 81 & (6,7,8,10,16)\\
+f & 80 & 77 & (15,16)\\
+v & 98 & 99 & (1,2,4)\\
+p & 89 & 87 & (15,16)\\
+b & 96 & 97 & (9,14,15)\\
+o & 87 & 84 & (16)\\
+\bottomrule 
+\end{tabular}
+\end{table}
