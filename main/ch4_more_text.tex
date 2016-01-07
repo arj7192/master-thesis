@@ -257,7 +257,7 @@ Traffic	& $16.38 \pm 0.77$ & $15.69 \pm 1.13$ & $16.88 \pm 1.22$  \\
 \end{tabular}
 \end{table}
 
-\subsubsection{1-D Convolutional Neural Network}
+\subsubsection{1-D Convolutional Neural Network} \label{cnn_results_db2}
 Similar to the SVM model, we have 4 different CNN models for the 4 classes, each model being a binary classifier. A review of all the selected hyper-parameters for the CNN is shown in table~\ref{tab:1d_cnn_hyper_db2}. All the 4 CNN models are trained with the same set of hyper-parameters except that for the 'Applause' model, CNN is trained for 500 epochs as it learned quicker compared to the other class models. We performed a 50-fold hold-out cross validation experiment with roughly 80\% of training data and 20\% of validation data.
 
 The cost function used is a modified cross-entropy function to account for the skew in the amount of data in the positive and negative classes. We call it a weighted binary cross entropy function and its idea is derived from \cite{kons2013audio}. The formula for this error metric along with the weights used in the case of each class are shown in figure~\ref{fig:w_b_c_e}. The weights of the classes are inversely proportional to the size of the respective class. In the following we discuss the results of each of the 4 models starting with 'Crowd', followed by the overall (averaged) results.
