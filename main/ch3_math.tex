@@ -211,13 +211,13 @@ For this dataset, we developed two models. First we implemented a Gaussian Mixtu
 \subsection{Gaussian Mixture Model}
 
 \subsubsection{System Overview}
-To reproduce the baseline GMM results of \cite{foster2015chime}, we implemented a similar GMM model. We extracted MFCC features out of the audio recordings and estimated GMMs on sequences of the MFCC features. GMM is often used in combination with MFCC features in the literature for tackling speech recognition or sound classification systems (\cite{stowelldetection}, \cite{defreville2006automatic}, \cite{aucouturier2007bag}).
+To reproduce the baseline GMM results of \cite{foster2015chime}, we implemented a similar GMM model. We extracted MFCC features out of the audio recordings and estimated GMMs on sequences of the MFCC features. GMM is often used in combination with MFCC features in the literature for tackling speech recognition or sound classification problems (\cite{stowelldetection}, \cite{defreville2006automatic}, \cite{aucouturier2007bag}).
 
 \subsubsection{Audio Features}
 The parameters for the extraction of MFCC features are derived from \cite{foster2015chime}. The parameter setting used in MFCC extraction from the audio recordings is shown in table~\ref{tab:param_mfcc_db3}. After discarding the first MFCC coefficient (which represents the frame energy), we get 13 MFCCs for each audio frame for each audio recording for estimating the GMMs. Complete feature extraction process is performed using Sony's WriteFeat tool.
 
 \subsubsection{Classification}
-For each of the 7 audio classes of the dataset, we estimate a pair of GMMs (as done in \cite{foster2015chime}). Using the expectation-maximization algorithm, we estimate full-covariance Gaussians. The number of Gaussians in the GMMs are varied as the values in the set: {1,2,4,8}. For predicting the presence or absence of an audio class, we calculate the log-likelihood ratio of the associated 
+For each of the 7 audio classes of the dataset, we estimate a pair of GMMs (as done in \cite{foster2015chime}). Using the expectation-maximization algorithm, we estimate full-covariance Gaussians. The number of Gaussians in the GMMs are varied as the values in the set: {1,2,4,8}. For predicting the presence or absence of an audio class, we calculate the log-likelihood ratio of the feature vector with respect to the estimated GMMs. (details can be found in \cite{foster2015chime} and are also discussed in the results section)
 
 \begin{table}[tb]
 \caption[Parameters for MFCC extraction for dataset-III]{Parameters for MFCC extraction for dataset-III}
@@ -239,3 +239,15 @@ Channel input & 2 (channels) \\
 \bottomrule 
 \end{tabular}
 \end{table}
+
+\subsection{Convolutional Neural Network}
+
+\subsubsection{System Overview}
+The idea of using a CNN model is mainly inspired by the CNN model used for dataset-I and dataset-II. Similar to the earlier CNN models, we consider the fixed length audio recordings as a 1-dimensional image. With the extracted MFCC coefficients for each audio frame of each audio recording, we represent the audio recordings in terms of MFCC feature maps which then serves as the input to the CNN model.
+
+\subsubsection{Audio Features}
+MFCCs are extracted from the audio recordings. The parameters used in MFCC extraction for the CNN model is exactly the same as used in the GMM model (see table~\ref{tab:param_mfcc_db3}). In the end we 13 MFCC coefficients per audio frame of an audio recording. Hence, each audio recording is finally represented in terms of 13 MFCC feature maps.
+
+\subsubsection{Classification}
+
+Figure~\ref{fig:cnn_model_db2} shows the CNN architecture, which is inspired from the CNN architectures used in dataset-I and dataset-II. There is 1 convolutional layer with 13 kernels of size
