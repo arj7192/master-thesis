@@ -1,4 +1,4 @@
-\chapter{Implemented Models}
+\chapter{Implemented Method}
 In this chapter we will discuss the machine learning models that we implemented for performing the task of audio event detection. For each dataset that we used, we designed different models, hence in the next sections we discuss the models developed for each dataset starting with dataset-I.
 
 \section{Dataset-I}
@@ -191,7 +191,7 @@ Channel input & 2 (channels) \\
 \end{table}
 
 \subsubsection{Classification}
-The convolutional neural network architecture is shown in figure~\ref{fig:cnn_model_db2}. There is 1 convolutional layer with 24 kernels of size (8,1) that convolve over the 24 respective feature maps to produce 4 output feature maps. This layer is followed by a pooling layer, that max-pools 1 out of the 16 convolved features resulting in a compressed representation. Subsequently, there is an affine/fully-connected layer that provides a single unit output from the 4 compressed feature maps. Finally, there is a sigmoid transformation over the single unit output that gives us the predicted probability of the binary classifier. We use tanh activation function for the hidden layers of the network. THe network consists of 768 convolutional layer paramters and 54 fully connected parameters summing to a total of 820 parameters.
+The convolutional neural network architecture is shown in figure~\ref{fig:cnn_model_db2}. There is 1 convolutional layer with 24 kernels of size (8,1) that convolve over the 24 respective feature maps to produce 4 output feature maps. This layer is followed by a pooling layer, that max-pools 1 out of the 16 convolved features resulting in a compressed representation. Subsequently, there is an affine/fully-connected layer that provides a single unit output from the 4 compressed feature maps. Finally, there is a sigmoid transformation over the single unit output that gives us the predicted probability of the binary classifier. We use tanh activation function for the hidden layers of the network. The network consists of 768 convolutional layer parameters and 54 fully connected parameters summing to a total of 820 parameters.
 
 We find the learning rate of 0.003, and a batch size of 50 suitable for the classification task. The training is done for 1000 epochs. We do not use momentum, dropouts or any other such optimization. We roughly have 3500 training and 800 validation data samples. Here, each data sample refers to an audio segment which is pre-processed into MFCC features.
 
@@ -203,6 +203,8 @@ Weighted binary cross-entropy is used as the cost-function for the training proc
 \caption[CNN model architecture for dataset-II]{[CNN model architecture for dataset-II}
 \label{fig:cnn_model_db2} 
 \end{figure}
+
+\subsection{Audio data augmentation experiment}
 
 
 \section{Dataset-III}
@@ -227,12 +229,12 @@ For each of the 7 audio classes of the dataset, we estimate a pair of GMMs (as d
 \toprule
 Parameter & Value \\
 \midrule
-Number of MFCC coefficients	& 25\\
-Number of mel filters	& 30\\
-Frame length & 46 (millisec)\\
-Frame shift 	& 23 (millisec)\\
-Maximum allowed frequency & 7500 (Hz)\\
-Minimum allowed frequency & 80 (Hz)\\
+Number of MFCC coefficients	& 14\\
+Number of mel filters	& 40\\
+Frame length & 21.33 (millisec)\\
+Frame shift 	& 10.67 (millisec)\\
+Maximum allowed frequency & 24000 (Hz)\\
+Minimum allowed frequency & 0 (Hz)\\
 Windowing type & Hamming\\
 Normalize mel filters (yes/no) & Yes \\
 Channel input & 2 (channels) \\
@@ -250,4 +252,15 @@ MFCCs are extracted from the audio recordings. The parameters used in MFCC extra
 
 \subsubsection{Classification}
 
-Figure~\ref{fig:cnn_model_db2} shows the CNN architecture, which is inspired from the CNN architectures used in dataset-I and dataset-II. There is 1 convolutional layer with 13 kernels of size
+Figure~\ref{fig:cnn_model_db3} shows the CNN architecture, which is inspired from the CNN architectures used in dataset-I and dataset-II. There is 1 convolutional layer with 13 kernels of size (6,1) that convolve over the 13 respective feature maps to produce the 4 output feature maps. This layer is followed by a max-pooling layer of size (16,1). Max-pooling results in a compressed representation. Then, a fully-connected layer provides a single unit output from this compressed representation. Finally, a sigmoid transformation over the unit output provides us the probability of whether the audio recording belongs to a particular audio class or not, as predicted by the CNN binary classifier. The network consists of 312 convolutional layer parameters and 92 affine/fully-connected layer parameters summing to a total of 404 total parameters.
+
+We find the learning rate of 0.01 and a batch size of 50 suitable for this classifier. Training is done for 500 epochs. We do not use any further optimization in the training procedure like momentum, dropout, etc. The training set consists of approximately 1750 audio recordings and the test set has roughly 200 data samples. Each data sample here means an audio recording pre-processed into MFCC feature maps.
+
+As used for dataset-II, we use weighted binary cross-entropy as the cost function to account for the skew between the number of data samples belonging to the positive and the negative class. The weights for each class are inversely proportional to the size of (number of data samples belonging to) each class. Details about the cost function are discussed in the results section. For the evaluation of the classifier performance, motivated from \cite{foster2015chime}, we use AUC - area under ROC curve as the error metric. AUC is a reasonable error metric when evaluating the performance of a binary class in a situation where the positive and negative classes are not equal in size (number of data samples). Complete CNN implementation is done using Sony's deep learning library - sDeePy.
+
+\begin{figure}[!htb] 
+\centering 
+\includegraphics[width=0.95\columnwidth]{cnn_model_db3}
+\caption[CNN model architecture for dataset-III]{CNN model architecture for dataset-III}
+\label{fig:cnn_model_db3} 
+\end{figure}
