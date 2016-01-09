@@ -1,7 +1,52 @@
 \chapter{Relevant Background}
-In this chapter we will see some examples of tables and figures.
+In this chapter we provide a brief overview of various concepts and useful information related to the thesis. In the following we first discuss what audio event detection is, followed by a brief description of neural networks in the machine learning context. Then, we discuss the previous related work and also introduce the concept of artificial data augmentation. We conclude this chapter by describing the audio datasets (set of recordings) that were used in the thesis work.
 
 \section{Audio Event Detection}
+An audio event detection system aims at detecting audio events in continuous audio recordings. Much of the previous research is done for isolated sound events \cite{gencoglu2014recognition}, where there is a single sound event in each recording and the audio event detection system is trained to detect an event occurring in a given time period. Such systems with one output audio event class per recording are called monophonic. If a single recording has more than one events, potentially overlapping with each other, then the audio event detection used in that case is polyphonic. In our thesis, we have worked on both monophonic and polyphonic systems. 
+
+The entire process of audio event detection is carried out in various steps: pre-processing, feature-extraction, training and testing, which are discussed below:
+\begin{enumerate}
+\item \textbf{Pre-processing} Input audio data is preprocessed before being fed to the next stage i.e. feature extraction. General preprocessing operations include normalization, transformation, trimming, windowing, smoothing, etc. For e.g. in speech recognition systems, end-point detection is a common pre-processing step.
+\item \textbf{Feature Extraction} Features are what is actually fed to the learning model as the input. Features are higher level representations compared to raw data, like frequencies instead of a raw temporal sample when using MFCCs for audio event detection. Features should be selected from the data in such a way that they contain enough information to properly represent the similarities between inter-class observations and variations between intra-class observations. In our work, MFCCs are the features that we extract from the audio recordings. \item \textbf{Training} Training phase in a machine learning model refers to the process of learning from labeled data. Audio event labels in a dataset are the audio event classes such as “Siren”, “Dog Barking”, “Gun Shot”, etc. that are annotated for each of the audio recordings. MFCC features are the inputs and labels are the output during the training of the machine learning model. Training a neural network, in particular, involves the computation of various hidden layers and non-linear transformations. Finally, the gradient back-propagates from the outermost layer to all the preceding hidden and input layer neurons. Details can be found at \cite{hastie2005elements}. \item \textbf{Testing} Once the model is trained, classification has to be performed on the test data i.e. the unseen data. The test data is completely isolated from the training data and represents the observations unseen to the system. The model’s performance by is judged by valuations done in this classification stage.
+\end{enumerate}
+
+There are quite a number of audio features that can be extracted from the audio recordings. The features are primarily spectral, spatial, compressive or low-level features. Table~\ref{tab:audio_feats} gives an overview of some commonly used features in audio tasks.
+
+\begin{table}[tb]
+\caption[Typical audio features]{Typical audio features}
+\label{tab:audio_feats}
+\centering
+\begin{tabular}{ccc}
+\toprule
+Feature name	& Abbreviation & Category \\
+\midrule
+Mel Frequency Cepstrum Coefficients	& MFCC & Spectral\\
+Gammatone Frequency Cepstrum Coefficients	& GFCC & Spectral \\
+Zero Crossing Rate	& ZCR & Low-level descriptor \\
+Low Energy Rate	& LER & Low-level descriptor \\
+Spectral Centroid	& SC & Low-level descriptor \\
+Spectral roll-off	& SRO & Low-level descriptor \\
+Inter-aural time difference 	& ITD & Spatial \\
+Inter-aural level difference & ILD & Spatial \\
+Frequency band energy	& FBE & Spectral \\
+Voicing	& N/A & Spectral \\
+Linear Predictive Coding	& LPC & Compressive \\
+\bottomrule 
+\end{tabular}
+\end{table}
+
+The spectral features indicate how much of the input signal is found inside a certain frequency bands over a range of frequencies. Discrete Fourier Transforms (DFT) are used to convert temporal information to spectral by taking small windows or frames (10-100 milliseconds) of the audio signals and assuming the audio signal is stationary in that window. 
+
+We have used MFCCs as our features. They are widely used in audio event recognition systems and are extremely effective in single source environments. These features are calculated by taking the log of mel-band energies and applying Discrete Cosine Transform(DCT). Logarithm is used for non-linearity because humans do not perceive loudness in audio in a linear scale. The MFCC extraction process is illustrated in figure~\ref{fig:mfcc_flow}.
+
+\begin{figure}[!htb] 
+\centering 
+\includegraphics[width=0.95\columnwidth]{mfcc_flow}
+\caption[MFCC Extraction Flowchart]{MFCC Extraction Flowchart}
+\label{fig:mfcc_flow} 
+\end{figure}
+
+The most widely used classifiers in audio event detection are the GMM[13] and HMM[1]. Neural networks are now being increasingly used as well. We also use neural networks as our machine learning model for the audio event detection task and we discuss more about it in the next section.
 
 \section{Neural Networks}
 
