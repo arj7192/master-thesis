@@ -437,7 +437,7 @@ We trained 8 networks for each of our 4 classes. The only difference between the
 
 Figures~\ref{fig:crowd-aug},\ref{fig:traffic-aug},\ref{fig:applause-aug} and \ref{fig:music-aug} show the 8 different EER curves for each of the data augmentation model for all 4 classes: 'Crowd', 'Traffic', 'Applause' and 'Music' respectively. Note that in the figures, 'everything' refers to the case (VIII) where all the six augmented datasets along with the original dataset is fed to the CNN. Figure~\ref{fig:data_aug_overall} compares the different augmentation approaches for all 4 audio classes. While there are notable improvements in performance using for example 'noise-addition' or 'noise-reduction' for 'Applause' class, 'pitch' for 'Crowd' class, etc. but there are also cases where data augmentation doesn't help, for example in the 'Traffic' class.  
 
-[------------------------MORE EXPLANATION NEEDED HERE-------------------------]
+[------------------------MORE DISCUSSION NEEDED-------------------------]
 
 \begin{table}[tb]
 \caption[Hyper-paramter setting: CNN with data augmentation]{Hyper-parameter setting: CNN with data augmentation}
@@ -584,7 +584,7 @@ ID & Learning Rate & Epochs & Batch-size & Output feature maps & Kernel size & M
 
 We tried these 16 different permutations of hyper-parameters on each of the 7 CNN models. Table~\ref{tab:cnn_result_db3} shows the best AUC performance (in \%) obtained from these CNN models along with the permutation IDs, which tells the sets of hyper-parameters that give those best CNN results. We also compare these results with the best GMM baseline results (from literature) for each of the 7 classes.
 
-[HERE ON, SHOW IMPROVEMENT IN CNN RESULTS BY e.g. TRANSFER LEARNING, etc.]
+[SHOW CNN RESULTS VERSUS GMM RESULTS OBTAINED WITH OUR EVALUATION SCHEME]
 
 \begin{table}[tb]
 \caption[CNN results in comparison with the best GMM results]{CNN results in comparison with the best GMM results}
